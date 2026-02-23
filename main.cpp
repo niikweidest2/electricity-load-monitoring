@@ -64,6 +64,16 @@ double totalDay(const Appliance a[], int c){
     double t=0; for(int i=0;i<c;i++) t+=kwhDay(a[i]); return t;
 }
 
+void addAppliance(Appliance a[], int& c){
+    if(c>=MAX_APPLIANCES){ cout<<"Limit reached.\n"; return; }
+    Appliance x;
+    x.name = readLineNZ("Name: ");
+    do{ x.watts = readD("Watts (>0): "); }while(x.watts<=0);
+    do{ x.hours = readD("Hours/day (0-24): "); }while(x.hours<0||x.hours>24);
+    a[c++] = x;
+    cout<<"Registered (in memory).\n";
+}
+
 int main(){
     Appliance a[MAX_APPLIANCES]; int count=0;
     cout<<"Electrical Load Monitoring & Billing System\n";
@@ -72,11 +82,11 @@ int main(){
     while(true){
         menu();
         int ch = readInt("Choose (1-6): ");
-        if(ch==1) cout<<"[Part 2] Register (coming)\n";
-        else if(ch==2) cout<<"[Part 2] View (coming)\n";
-        else if(ch==3) cout<<"[Part 2] Search (coming)\n";
-        else if(ch==4) cout<<"[Part 2] Billing (coming)\n";
-        else if(ch==5) cout<<"[Part 2] Save (coming)\n";
+        if(ch==1) addAppliance(a,count);
+        else if(ch==2) cout<<"[Part 3] View (coming)\n";
+        else if(ch==3) cout<<"[Part 3] Search (coming)\n";
+        else if(ch==4) cout<<"[Part 3] Billing (coming)\n";
+        else if(ch==5) cout<<"[Part 3] Save (coming)\n";
         else if(ch==6){ cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
     }
