@@ -59,6 +59,11 @@ void menu(){
         <<"6. Exit\n";
 }
 
+double kwhDay(const Appliance& x){ return (x.watts/1000.0)*x.hours; }
+double totalDay(const Appliance a[], int c){
+    double t=0; for(int i=0;i<c;i++) t+=kwhDay(a[i]); return t;
+}
+
 int main(){
     Appliance a[MAX_APPLIANCES]; int count=0;
     cout<<"Electrical Load Monitoring & Billing System\n";
@@ -67,11 +72,11 @@ int main(){
     while(true){
         menu();
         int ch = readInt("Choose (1-6): ");
-        if(ch==1) cout<<"[Part 1] Register (coming)\n";
-        else if(ch==2) cout<<"[Part 1] View (coming)\n";
-        else if(ch==3) cout<<"[Part 1] Search (coming)\n";
-        else if(ch==4) cout<<"[Part 1] Billing (coming)\n";
-        else if(ch==5) cout<<"[Part 1] Save (coming)\n";
+        if(ch==1) cout<<"[Part 2] Register (coming)\n";
+        else if(ch==2) cout<<"[Part 2] View (coming)\n";
+        else if(ch==3) cout<<"[Part 2] Search (coming)\n";
+        else if(ch==4) cout<<"[Part 2] Billing (coming)\n";
+        else if(ch==5) cout<<"[Part 2] Save (coming)\n";
         else if(ch==6){ cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
     }
