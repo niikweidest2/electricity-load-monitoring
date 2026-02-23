@@ -74,6 +74,16 @@ void addAppliance(Appliance a[], int& c){
     cout<<"Registered (in memory).\n";
 }
 
+void viewAppliances(const Appliance a[], int c){
+    if(c==0){ cout<<"No appliances.\n"; return; }
+    cout<<fixed<<setprecision(2);
+    cout<<left<<setw(4)<<"#"<<setw(22)<<"Name"<<setw(10)<<"Watts"<<setw(8)<<"Hours"<<setw(10)<<"kWh/day"<<"\n";
+    for(int i=0;i<c;i++){
+        cout<<left<<setw(4)<<(i+1)<<setw(22)<<a[i].name<<setw(10)<<a[i].watts
+            <<setw(8)<<a[i].hours<<setw(10)<<kwhDay(a[i])<<"\n";
+    }
+}
+
 int main(){
     Appliance a[MAX_APPLIANCES]; int count=0;
     cout<<"Electrical Load Monitoring & Billing System\n";
@@ -83,10 +93,10 @@ int main(){
         menu();
         int ch = readInt("Choose (1-6): ");
         if(ch==1) addAppliance(a,count);
-        else if(ch==2) cout<<"[Part 3] View (coming)\n";
-        else if(ch==3) cout<<"[Part 3] Search (coming)\n";
-        else if(ch==4) cout<<"[Part 3] Billing (coming)\n";
-        else if(ch==5) cout<<"[Part 3] Save (coming)\n";
+        else if(ch==2) viewAppliances(a,count);
+        else if(ch==3) cout<<"[Part 4] Search (coming)\n";
+        else if(ch==4) cout<<"[Part 4] Billing (coming)\n";
+        else if(ch==5) cout<<"[Part 4] Save (coming)\n";
         else if(ch==6){ cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
     }
