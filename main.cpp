@@ -84,6 +84,21 @@ void viewAppliances(const Appliance a[], int c){
     }
 }
 
+void searchAppliances(const Appliance a[], int c){
+    if(c==0){ cout<<"No appliances.\n"; return; }
+    string q = lowerStr(readLineNZ("Search name: "));
+    bool found=false;
+    cout<<fixed<<setprecision(2);
+    for(int i=0;i<c;i++){
+        if(lowerStr(a[i].name).find(q)!=string::npos){
+            cout<<"- "<<a[i].name<<" | "<<a[i].watts<<" W | "<<a[i].hours
+                <<" hrs | "<<kwhDay(a[i])<<" kWh/day\n";
+            found=true;
+        }
+    }
+    if(!found) cout<<"No match.\n";
+}
+
 int main(){
     Appliance a[MAX_APPLIANCES]; int count=0;
     cout<<"Electrical Load Monitoring & Billing System\n";
@@ -94,9 +109,9 @@ int main(){
         int ch = readInt("Choose (1-6): ");
         if(ch==1) addAppliance(a,count);
         else if(ch==2) viewAppliances(a,count);
-        else if(ch==3) cout<<"[Part 4] Search (coming)\n";
-        else if(ch==4) cout<<"[Part 4] Billing (coming)\n";
-        else if(ch==5) cout<<"[Part 4] Save (coming)\n";
+        else if(ch==3) searchAppliances(a,count);
+        else if(ch==4) cout<<"[Part 5] Billing (coming)\n";
+        else if(ch==5) cout<<"[Part 5] Save (coming)\n";
         else if(ch==6){ cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
     }
