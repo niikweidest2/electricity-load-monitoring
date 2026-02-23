@@ -69,7 +69,6 @@ void saveAppliances(const Appliance a[], int c){
     if(!out.is_open()){ cout<<"Error writing "<<APPLIANCES_FILE<<"\n"; return; }
     for(int i=0;i<c;i++) out<<a[i].name<<"|"<<a[i].watts<<"|"<<a[i].hours<<"\n";
     out.close();
-    cout<<"Saved to "<<APPLIANCES_FILE<<".\n";
 }
 
 void loadAppliances(Appliance a[], int& c){
@@ -102,6 +101,22 @@ void loadAppliances(Appliance a[], int& c){
     in.close();
 }
 
+void appendBilling(double tariff, int count, double dayKwh, double dayCost, double monthKwh, double monthCost){
+    ofstream out(BILLING_FILE.c_str(), ios::app);
+    if(!out.is_open()){ cout<<"Error appending "<<BILLING_FILE<<"\n"; return; }
+
+    out<<"================ BILLING SUMMARY ================\n";
+    out<<fixed<<setprecision(2);
+    out<<"Tariff: "<<tariff<<" per kWh\n";
+    out<<"Appliances count: "<<count<<"\n";
+    out<<"Total daily energy: "<<dayKwh<<" kWh\n";
+    out<<"Total daily cost:  "<<dayCost<<"\n";
+    out<<"Estimated 30-day energy: "<<monthKwh<<" kWh\n";
+    out<<"Estimated 30-day cost:  "<<monthCost<<"\n";
+    out<<"=================================================\n\n";
+    out.close();
+}
+
 void addAppliance(Appliance a[], int& c){
     if(c>=MAX_APPLIANCES){ cout<<"Limit reached.\n"; return; }
     Appliance x;
@@ -109,7 +124,8 @@ void addAppliance(Appliance a[], int& c){
     do{ x.watts = readD("Watts (>0): "); }while(x.watts<=0);
     do{ x.hours = readD("Hours/day (0-24): "); }while(x.hours<0||x.hours>24);
     a[c++] = x;
-    cout<<"Registered (in memory).\n";
+    saveAppliances(a,c);
+    cout<<"Saved.\n";
 }
 
 void viewAppliances(const Appliance a[], int c){
@@ -137,6 +153,29 @@ void searchAppliances(const Appliance a[], int c){
     if(!found) cout<<"No match.\n";
 }
 
+void billingFlow(const Appliance a[], int c){
+    if(c==0){ cout<<"No appliances. Add some first.\n"; return; }
+    double tariff;
+    do{ tariff = readD("Tariff per kWh (>0): "); }while(tariff<=0);
+
+    double dayKwh = totalDay(a,c);
+    double dayCost = dayKwh * tariff;
+    double monthKwh = dayKwh * 30.0;
+    double monthCost = dayCost * 30.0;
+
+    cout<<fixed<<setprecision(2);
+    cout<<"\nTariff: "<<tariff<<" per kWh\n";
+    cout<<"Daily energy: "<<dayKwh<<" kWh\n";
+    cout<<"Daily cost:   "<<dayCost<<"\n";
+    cout<<"30-day energy: "<<monthKwh<<" kWh\n";
+    cout<<"30-day cost:   "<<monthCost<<"\n";
+
+    cout<<"Save summary to billing_summary.txt? (y/n): ";
+    char ch; cin>>ch; flushIn();
+    if(ch=='y'||ch=='Y'){ appendBilling(tariff,c,dayKwh,dayCost,monthKwh,monthCost); cout<<"Billing summary saved.\n"; }
+    else cout<<"Not saved.\n";
+}
+
 int main(){
     Appliance a[MAX_APPLIANCES]; int count=0;
     loadAppliances(a,count);
@@ -150,10 +189,11 @@ int main(){
         if(ch==1) addAppliance(a,count);
         else if(ch==2) viewAppliances(a,count);
         else if(ch==3) searchAppliances(a,count);
-        else if(ch==4) cout<<"[Part 7] Billing (coming)\n";
-        else if(ch==5) saveAppliances(a,count);
+        else if(ch==4) billingFlow(a,count);
+        else if(ch==5){ saveAppliances(a,count); cout<<"Saved to "<<APPLIANCES_FILE<<".\n"; }
         else if(ch==6){ saveAppliances(a,count); cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
     }
     return 0;
 }
+
