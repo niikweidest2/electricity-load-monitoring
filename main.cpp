@@ -72,6 +72,36 @@ void saveAppliances(const Appliance a[], int c){
     cout<<"Saved to "<<APPLIANCES_FILE<<".\n";
 }
 
+void loadAppliances(Appliance a[], int& c){
+    c=0;
+    ifstream in(APPLIANCES_FILE.c_str());
+    if(!in.is_open()) return;
+
+    string line;
+    while(getline(in,line)){
+        line=trim(line);
+        if(line.empty()) continue;
+
+        int p1=(int)line.find('|');
+        int p2=(p1==-1)?-1:(int)line.find('|',p1+1);
+        if(p1==-1||p2==-1) continue;
+
+        string name=trim(line.substr(0,p1));
+        string ws=trim(line.substr(p1+1,p2-p1-1));
+        string hs=trim(line.substr(p2+1));
+        if(name.empty()) continue;
+
+        double w=0,h=0;
+        try{ w=stod(ws); h=stod(hs); }catch(...){ continue; }
+        if(w<=0||h<0||h>24) continue;
+
+        if(c<MAX_APPLIANCES){
+            a[c].name=name; a[c].watts=w; a[c].hours=h; c++;
+        }
+    }
+    in.close();
+}
+
 void addAppliance(Appliance a[], int& c){
     if(c>=MAX_APPLIANCES){ cout<<"Limit reached.\n"; return; }
     Appliance x;
@@ -109,6 +139,8 @@ void searchAppliances(const Appliance a[], int c){
 
 int main(){
     Appliance a[MAX_APPLIANCES]; int count=0;
+    loadAppliances(a,count);
+
     cout<<"Electrical Load Monitoring & Billing System\n";
     cout<<"Loaded appliances: "<<count<<"\n";
 
@@ -118,7 +150,7 @@ int main(){
         if(ch==1) addAppliance(a,count);
         else if(ch==2) viewAppliances(a,count);
         else if(ch==3) searchAppliances(a,count);
-        else if(ch==4) cout<<"[Part 6] Billing (coming)\n";
+        else if(ch==4) cout<<"[Part 7] Billing (coming)\n";
         else if(ch==5) saveAppliances(a,count);
         else if(ch==6){ saveAppliances(a,count); cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
