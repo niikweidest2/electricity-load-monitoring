@@ -64,6 +64,14 @@ double totalDay(const Appliance a[], int c){
     double t=0; for(int i=0;i<c;i++) t+=kwhDay(a[i]); return t;
 }
 
+void saveAppliances(const Appliance a[], int c){
+    ofstream out(APPLIANCES_FILE.c_str());
+    if(!out.is_open()){ cout<<"Error writing "<<APPLIANCES_FILE<<"\n"; return; }
+    for(int i=0;i<c;i++) out<<a[i].name<<"|"<<a[i].watts<<"|"<<a[i].hours<<"\n";
+    out.close();
+    cout<<"Saved to "<<APPLIANCES_FILE<<".\n";
+}
+
 void addAppliance(Appliance a[], int& c){
     if(c>=MAX_APPLIANCES){ cout<<"Limit reached.\n"; return; }
     Appliance x;
@@ -110,9 +118,9 @@ int main(){
         if(ch==1) addAppliance(a,count);
         else if(ch==2) viewAppliances(a,count);
         else if(ch==3) searchAppliances(a,count);
-        else if(ch==4) cout<<"[Part 5] Billing (coming)\n";
-        else if(ch==5) cout<<"[Part 5] Save (coming)\n";
-        else if(ch==6){ cout<<"Goodbye!\n"; break; }
+        else if(ch==4) cout<<"[Part 6] Billing (coming)\n";
+        else if(ch==5) saveAppliances(a,count);
+        else if(ch==6){ saveAppliances(a,count); cout<<"Goodbye!\n"; break; }
         else cout<<"Invalid choice.\n";
     }
     return 0;
